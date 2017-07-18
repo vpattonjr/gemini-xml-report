@@ -81,7 +81,7 @@ var Runner = inherit({
   			.name(data)
 		});
 
-  		builder.writeTo('test-report.xml');
+  		builder.writeTo('reports/gemini-xml-report.xml');
     },
 
 	_createResult: function(result){
