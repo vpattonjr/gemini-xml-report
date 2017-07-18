@@ -1,4 +1,4 @@
-# gemini-xml-report
+# gemini-xml-reporter
 XML report for Gemini using junit-report-builder and code from gemini-json-reporter. This was built using code from gemini-json-reporter, much thanks to the devs who wrote that.  
 This also uses junit-report-builder https://github.com/davidparsson/junit-report-builder
 
