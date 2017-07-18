@@ -2,17 +2,11 @@
 
 var inherit = require('inherit'),
     _ = require('lodash'),
-    chalk = require('chalk'),
 	fs = require('fs'),
 	moment = require('moment'),
 	collection = {},
 	builder = require('junit-report-builder'),
-
-    RunnerEvents = require('../gemini/lib/constants/events'),
-
-    ICON_SUCCESS = chalk.green('\u2713'),
-    ICON_FAIL = chalk.red('\u2718'),
-    ICON_WARN = chalk.bold.yellow('!');
+    RunnerEvents = require('../gemini/lib/constants/events');
 
 var Runner = inherit({
     attachRunner: function(runner) {
@@ -25,7 +19,7 @@ var Runner = inherit({
         runner.on(RunnerEvents.INFO, this._onInfo.bind(this));
         runner.on(RunnerEvents.SKIP_STATE, this._onSkipState.bind(this));
     },
-    
+
     _onBegin: function() {
 		this.beginTestTime = this.startTime = new Date();
 		this.suiteSet = {};
@@ -76,10 +70,11 @@ var Runner = inherit({
 		for(var k in this.suiteSet){
 			suites++;
 		}
+		var now = new Date()
 		var d = Math.round((endTime - this.startTime) / 1000)
 		var testDuration = moment().add(moment.duration(d)).format('ss')
 		var names = _.keys(this.suiteSet)
-		var suite = builder.testSuite().name('Gemini-Report').time(d);
+		var suite = builder.testSuite().name('Gemini-Report').time(d).timestamp(this.beginTestTime);
 		var testCase = _.forEach(names, function (data) {
 			suite.testCase(data)
   			.className('my.'+data.replace(/ /g,'')+'.Class')
