@@ -1,6 +1,6 @@
 {
   "name": "gemini-xml-reporter",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Plugin for Gemini which outputs a readable xml file for CI's like Jenkins.",
   "main": "index.js",
   "dependencies": {
