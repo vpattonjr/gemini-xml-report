@@ -88,7 +88,7 @@ var Runner = inherit({
 		});
 		var testCase = _.forEach(this.results.failures, function (data) {
 			suite.testCase(data.fullTitle)
-  			.className(data.browserID.replace(/ /g,'')+'.'+data.fullTitle)
+  			.className(data.browserID.replace(/ /g,'')+'.Test Cases')
   			.name(data.title)
   			.time(data.duration)
   			.failure(data.error)
