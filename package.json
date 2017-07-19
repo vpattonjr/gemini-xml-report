@@ -1,6 +1,6 @@
 {
   "name": "gemini-xml-reporter",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "Plugin for Gemini which outputs a readable xml file for CI's like Jenkins.",
   "main": "index.js",
   "dependencies": {
@@ -24,6 +24,10 @@
       "email": "trieu.ssqa@gmail.com"
     }
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vpattonjr/gemini-xml-report.git"
+  },
   "keywords": [
     "gemini-plugin",
     "xml",

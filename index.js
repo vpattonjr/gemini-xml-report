@@ -18,6 +18,7 @@ var Runner = inherit({
         runner.on(RunnerEvents.END, this._onEnd.bind(this));
         runner.on(RunnerEvents.INFO, this._onInfo.bind(this));
         runner.on(RunnerEvents.SKIP_STATE, this._onSkipState.bind(this));
+        runner.on(RunnerEvents.TEST_RESULT, this._onTestResult.bind(this));
     },
 
     _onBegin: function() {
@@ -33,6 +34,7 @@ var Runner = inherit({
 
     _onEndTest: function(result) {
         var handler = result.equal? this._onCapture : this._onError;
+        collection.handler = handler;
         handler.call(this, result);
     },
 
@@ -63,25 +65,43 @@ var Runner = inherit({
         console.log(result.message);
     },
 
-    _onEnd: function() {
-        var total = this.results.failures.length + this.results.passes.length + this.results.skipped.length;
+    _onTestResult: function(result) {
+    	collection.result = this._createResult(result)
+    },
+
+    _onEnd: function(result) {
+//        var total = this.results.failures.length + this.results.passes.length + this.results.skipped.length;
 		var endTime = new Date();
-		var suites = 0;
-		for(var k in this.suiteSet){
-			suites++;
-		}
-		var now = new Date()
+//		var suites = 0;
+		// for(var k in this.suiteSet){
+		// 	suites++;
+		// }
+//		var now = new Date()
 		var d = Math.round((endTime - this.startTime) / 1000)
 		var testDuration = moment().add(moment.duration(d)).format('ss')
-		var names = _.keys(this.suiteSet)
 		var suite = builder.testSuite().name('Gemini-Report').time(d).timestamp(this.beginTestTime);
-		var testCase = _.forEach(names, function (data) {
-			suite.testCase(data)
-  			.className('my.'+data.replace(/ /g,'')+'.Class')
-  			.name(data)
+		var testCase = _.forEach(this.results.passes, function (data) {
+			suite.testCase(data.fullTitle)
+  			.className(data.browserID.replace(/ /g,'')+'.Class')
+  			.name(data.title)
+  			.time(data.duration)
 		});
-
-  		builder.writeTo('reports/gemini-xml-report.xml');
+		var testCase = _.forEach(this.results.failures, function (data) {
+			suite.testCase(data.fullTitle)
+  			.className(data.browserID.replace(/ /g,'')+'.Class')
+  			.name(data.title)
+  			.time(data.duration)
+  			.failure(data.error)
+  			.error(data.referencePath)
+		});
+		var testCase = _.forEach(this.results.skipped, function (data) {
+			suite.testCase(data.fullTitle)
+  			.className(data.browserID.replace(/ /g,'')+'.Class')
+  			.name(data.title)
+  			.time(data.duration)
+  			.skipped()
+		});
+   		builder.writeTo('reports/gemini-xml-report.xml');
     },
 
 	_createResult: function(result){
@@ -90,6 +110,8 @@ var Runner = inherit({
 		obj.fullTitle = result.suite.path.join(' ');
 		obj.browserID = result.browserId;
 		obj.duration = this._getDuration();
+		obj.referencePath = result.referencePath;
+		obj.url = result.suite.url;
 		this.suiteSet[result.suite.name] = true;
 		return obj;
 	},
