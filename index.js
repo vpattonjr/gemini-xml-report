@@ -82,7 +82,7 @@ var Runner = inherit({
 		var suite = builder.testSuite().name('Gemini-Report').time(d).timestamp(this.beginTestTime);
 		var testCase = _.forEach(this.results.passes, function (data) {
 			suite.testCase(data.fullTitle)
-  			.className(data.browserID.replace(/ /g,'')+'.Class')
+  			.className(data.browserID.replace(/ /g,''))
   			.name(data.title)
   			.time(data.duration)
 		});
